@@ -81,7 +81,7 @@
             }
         }
         
-        /* Стили для бейджа корзины (оранжевый кружок) - ИСПРАВЛЕНО И ОПТИМИЗИРОВАНО ДЛЯ МОБИЛЬНЫХ */
+        /* Стили для бейджа корзины (оранжевый кружок) - ОПТИМИЗИРОВАНО */
         .cart-badge {
             position: absolute;
             top: -5px; /* Сдвиг, чтобы быть над иконкой */
@@ -99,23 +99,70 @@
             will-change: opacity, transform; /* Подсказка браузеру для оптимизации (GPU acceleration) */
         }
         
-        /* НОВЫЙ КЛАСС для скрытия, более надежный, чем 'hidden' на мобильных */
+        /* КЛАСС для скрытия */
         .cart-badge.is-empty {
             opacity: 0;
             pointer-events: none; /* Игнорируем клики, когда пуст */
             transform: scale(0.5); /* Эффект уменьшения */
         }
 
-        /* Стили для контейнера корзины слева */
-        .cart-icon-container {
-            background-color: rgba(68, 0, 133, 0.8); /* Темно-фиолетовый */
-            box-shadow: 0 0 10px rgba(138, 43, 226, 0.7); /* Фиолетовое свечение */
-        }
         /* Стили для новой иконки, чтобы она светилась */
         .neon-bag-icon {
             color: #8a2be2; /* Фиолетовый цвет */
             filter: drop-shadow(0 0 5px #8a2be2) drop-shadow(0 0 10px #4b0082);
             transition: color 0.2s;
+        }
+
+        /* --- НОВЫЕ СТИЛИ ДЛЯ КРУГЛЫХ КНОПОК КОЛИЧЕСТВА --- */
+        .round-qty-button {
+            width: 44px; /* Чуть больше для удобства нажатия на мобильных */
+            height: 44px;
+            border-radius: 9999px; /* full circle */
+            background-color: #8a2be2; /* BlueViolet / Фиолетовый */
+            color: white;
+            font-weight: 900;
+            font-size: 1.75rem; /* text-3xl для символов + / - */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Неоновое свечение */
+            box-shadow: 0 0 8px rgba(138, 43, 226, 0.8), 0 0 20px rgba(75, 0, 130, 0.6);
+            transition: all 0.15s ease-in-out;
+            border: 2px solid #c9a0ff; /* Светлая окантовка */
+            cursor: pointer;
+            flex-shrink: 0; /* Чтобы не сжимались в flex-контейнере */
+        }
+        .round-qty-button:hover {
+            background-color: #9370db; /* MediumPurple */
+            box-shadow: 0 0 15px rgba(138, 43, 226, 1), 0 0 35px rgba(75, 0, 130, 0.8);
+            transform: scale(1.05);
+        }
+        .round-qty-button:active {
+             transform: scale(0.95);
+             box-shadow: 0 0 5px rgba(138, 43, 226, 0.5);
+        }
+
+        /* Стиль для центрального счетчика */
+        .qty-display {
+            flex-grow: 1; /* Занимает оставшееся место */
+            height: 44px; /* Совпадает с высотой кнопок */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* Фон с неоновым обрамлением */
+            background-color: rgba(26, 26, 26, 0.9);
+            box-shadow: inset 0 0 10px rgba(138, 43, 226, 0.4); 
+            color: #d1b5ff; /* Светло-фиолетовый текст */
+            font-size: 1.125rem; /* text-lg */
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            margin: 0 8px; /* Отступ между кнопками и счетчиком */
+            border-radius: 8px; /* Немного скругленный */
+            text-shadow: 0 0 5px #c9a0ff;
+        }
+        /* Увеличенный отступ для корректного отображения контролов */
+        .gift-item-controls {
+            padding: 4px 0; /* Небольшой вертикальный отступ */
         }
     </style>
 </head>
@@ -161,22 +208,23 @@
                 const renderQuantityControls = (itemName, quantity) => {
                     // Создаем контейнер для счетчика
                     const controls = document.createElement('div');
-                    // Оптимизация: Общий контейнер с закругленными углами
-                    controls.className = 'flex items-center justify-between w-full h-full rounded-xl overflow-hidden shadow-lg shadow-purple-900/50';
+                    
+                    // ОБНОВЛЕНО: Используем justify-center и flex для нового макета
+                    controls.className = 'flex items-center w-full gift-item-controls';
+
                     controls.innerHTML = `
                         <button 
                             id="minus-${itemName.replace(/\s/g, '-')}"
-                            class="w-1/3 py-2.5 bg-purple-600 text-white font-extrabold text-2xl hover:bg-purple-500 transition duration-150"
+                            class="round-qty-button"
                             onclick="handleQuantityChange('${itemName}', -1)">
                             –
                         </button>
-                        <span class="w-1/3 text-center text-lg font-bold text-white tracking-widest" 
-                              style="background-color: #1a1a1a; text-shadow: 0 0 8px rgba(255, 255, 255, 0.7); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);">
+                        <span class="qty-display">
                             ${quantity}
                         </span>
                         <button 
                             id="plus-${itemName.replace(/\s/g, '-')}"
-                            class="w-1/3 py-2.5 bg-purple-600 text-white font-extrabold text-2xl hover:bg-purple-500 transition duration-150"
+                            class="round-qty-button"
                             onclick="handleQuantityChange('${itemName}', 1)">
                             +
                         </button>
