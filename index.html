@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikTok Gift Haul</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Подключение шрифтов: Inter, Bebas Neue, и НОВЫЙ Press Start 2P --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Подключение шрифтов: Inter, Bebas Neue, и Press Start 2P --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         html, body {
             height: 100%;
@@ -20,8 +20,6 @@
             background-attachment: fixed;
             
             color: white;
-            /* ИСПРАВЛЕНИЕ: Увеличение нижнего отступа с 9rem до 12rem, чтобы компенсировать высоту футера */
-            padding-bottom: 12rem; 
         }
         .neon-title {
             font-family: 'Bebas Neue', cursive;
@@ -50,22 +48,22 @@
             font-size: 1.5rem;
             min-height: 200px;
         }
-        /* НОВЫЙ СТИЛЬ: для названий подарков */
         .gift-name-neon {
-            font-family: 'Press Start 2P', cursive; /* Применяем необычный шрифт */
-            color: #d1b5ff; /* Светлый пурпурный для текста */
+            font-family: 'Press Start 2P', cursive;
+            color: #d1b5ff;
             text-shadow: 
-                0 0 5px #ff00ff,   /* Розовое свечение */
-                0 0 10px #8a2be2,  /* Фиолетовое свечение */
-                0 0 15px #4b0082;  /* Темно-фиолетовое свечение */
+                0 0 5px #ff00ff,
+                0 0 10px #8a2be2,
+                0 0 15px #4b0082;
             transition: text-shadow 0.3s ease-in-out;
-            /* Адаптивный размер: text-lg на маленьких экранах, text-xl на средних и больше */
-            font-size: 1rem; /* Базовый размер для маленьких экранов */
+            /* ИСПРАВЛЕНИЕ: Меньший базовый размер шрифта для лучшей адаптации на мобильных */
+            font-size: 0.875rem; /* text-sm */
+            line-height: 1.25; /* Для лучшего переноса строк */
         }
         /* Медиа-запрос для размера шрифта на средних экранах */
         @media (min-width: 640px) { /* sm */
             .gift-name-neon {
-                font-size: 1.25rem; /* text-xl */
+                font-size: 1.125rem; /* text-lg на sm и больше */
             }
         }
     </style>
@@ -100,7 +98,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Mystery Box Image]
                 </div>
-                <!-- Применяем новый класс для названия --><h3 class="gift-name-neon font-bold text-center mb-3">Mystery Box</h3>
+                <!-- Добавлен flex-grow для названия --><h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Mystery Box</h3>
                 <button 
                     onclick="handleAdd('Mystery Box')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -112,7 +110,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Haunted Dolls Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Haunted Dolls</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Haunted Dolls</h3>
                 <button 
                     onclick="handleAdd('Haunted Dolls')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -124,7 +122,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Gothic Skull Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Gothic Skull</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Gothic Skull</h3>
                 <button 
                     onclick="handleAdd('Gothic Skull')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -136,7 +134,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Magic Potion Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Magic Potion</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Magic Potion</h3>
                 <button 
                     onclick="handleAdd('Magic Potion')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -148,7 +146,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Dark Amulet Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Dark Amulet</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Dark Amulet</h3>
                 <button 
                     onclick="handleAdd('Dark Amulet')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -160,7 +158,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Zombie Hand Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Zombie Hand</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Zombie Hand</h3>
                 <button 
                     onclick="handleAdd('Zombie Hand')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -172,7 +170,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Crystal Ball Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Crystal Ball</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Crystal Ball</h3>
                 <button 
                     onclick="handleAdd('Crystal Ball')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -184,7 +182,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Ancient Tome Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Ancient Tome</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Ancient Tome</h3>
                 <button 
                     onclick="handleAdd('Ancient Tome')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -196,7 +194,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Shadow Cloak Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Shadow Cloak</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Shadow Cloak</h3>
                 <button 
                     onclick="handleAdd('Shadow Cloak')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -208,7 +206,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Spectral Cat Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Spectral Cat</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Spectral Cat</h3>
                 <button 
                     onclick="handleAdd('Spectral Cat')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -220,7 +218,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Frozen Breath Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Frozen Breath</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Frozen Breath</h3>
                 <button 
                     onclick="handleAdd('Frozen Breath')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -232,7 +230,7 @@
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
                     [Vampire Dust Image]
                 </div>
-                <h3 class="gift-name-neon font-bold text-center mb-3">Vampire Dust</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Vampire Dust</h3>
                 <button 
                     onclick="handleAdd('Vampire Dust')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
@@ -240,7 +238,9 @@
                 </button>
             </div>
 
-            <!-- КОНЕЦ: 12 КАРТОЧЕК ПОДАРКОВ --></main>
+            <!-- КОНЕЦ: 12 КАРТОЧЕК ПОДАРКОВ --><div class="h-28 col-span-2"></div> 
+
+        </main>
 
     </div>
 
