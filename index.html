@@ -80,7 +80,8 @@
                 font-size: 1.125rem; /* text-lg на sm и больше */
             }
         }
-        /* Стили для бейджа корзины (оранжевый кружок) - ОБНОВЛЕНЫ */
+        
+        /* Стили для бейджа корзины (оранжевый кружок) - ИСПРАВЛЕНО */
         .cart-badge {
             position: absolute;
             top: -5px; /* Сдвиг, чтобы быть над иконкой */
@@ -93,7 +94,17 @@
             padding: 4px 6px;
             border-radius: 9999px; /* Круглый */
             box-shadow: 0 0 5px #ff8c00;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out; /* Плавный переход */
+            transform: scale(1); /* Изначальный размер */
         }
+        
+        /* НОВЫЙ КЛАСС для скрытия, более надежный, чем 'hidden' на мобильных */
+        .cart-badge.is-empty {
+            opacity: 0;
+            pointer-events: none; /* Игнорируем клики, когда пуст */
+            transform: scale(0.5); /* Эффект уменьшения */
+        }
+
         /* Стили для контейнера корзины слева */
         .cart-icon-container {
             background-color: rgba(68, 0, 133, 0.8); /* Темно-фиолетовый */
@@ -135,11 +146,12 @@
                     const totalCountElement = document.getElementById('total-item-count');
                     if (totalCountElement) {
                         totalCountElement.textContent = totalItems;
-                        // Показать/скрыть бейдж в зависимости от количества товаров
+                        
+                        // ИСПРАВЛЕННАЯ ЛОГИКА: используем класс is-empty для управления видимостью через CSS
                         if (totalItems > 0) {
-                            totalCountElement.classList.remove('hidden');
+                            totalCountElement.classList.remove('is-empty');
                         } else {
-                            totalCountElement.classList.add('hidden');
+                            totalCountElement.classList.add('is-empty');
                         }
                     }
                 };
@@ -487,20 +499,20 @@
 
     </div>
 
-    <!-- Фиксированный футер (корзина) -->
-    <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4">
+    <!-- Фиксированный футер (корзина) - ОБНОВЛЕН Z-INDEX -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4 z-50">
         <div class="max-w-xl mx-auto flex justify-center items-center space-x-4">
             
-            <!-- НОВАЯ ИКОНКА С БЕЙДЖЕМ (ОБНОВЛЕНО) -->
+            <!-- НОВАЯ ИКОНКА С БЕЙДЖЕМ -->
             <div class="flex items-center justify-center p-3 rounded-xl flex-shrink-0 relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 neon-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <!-- Бейдж для отображения количества товаров. Класс 'hidden' уберется JS-функцией renderCartTotal, когда товаров станет > 0 -->
-                <span id="total-item-count" class="cart-badge hidden">0</span> 
+                <!-- Бейдж для отображения количества товаров. Изначально добавляем класс is-empty для скрытия -->
+                <span id="total-item-count" class="cart-badge is-empty">0</span> 
             </div>
             
-            <!-- Кнопка "Get Gifts" (ОБНОВЛЕНО: Добавлен обработчик клика) -->
+            <!-- Кнопка "Get Gifts" -->
             <button onclick="showCartSummary()" class="neon-button py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300 flex-grow">
                 Get Gifts
             </button>
