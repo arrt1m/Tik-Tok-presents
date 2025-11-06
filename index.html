@@ -164,6 +164,34 @@
         .gift-item-controls {
             padding: 4px 0; /* Небольшой вертикальный отступ */
         }
+        
+        /* Стили для модального окна ввода имени пользователя */
+        .username-input {
+            /* Фиолетовый фон, как на изображении */
+            background-color: rgba(100, 50, 200, 0.3); 
+            border: 2px solid #8a2be2; /* Фиолетовая рамка */
+            color: white;
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); /* Фиолетовое свечение */
+            transition: box-shadow 0.2s;
+        }
+
+        .username-input:focus {
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.8), 0 0 30px rgba(75, 0, 130, 0.7);
+        }
+
+        .neon-purple-button {
+            background-color: #8a2be2; /* Blue Violet / Фиолетовый */
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 0 10px #8a2be2, 0 0 20px #4b0082;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .neon-purple-button:hover {
+            background-color: #9370db;
+            box-shadow: 0 0 15px #8a2be2, 0 0 30px #4b0082;
+            transform: translateY(-1px);
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -285,44 +313,151 @@
                 // Инициализация корзины при загрузке
                 document.addEventListener('DOMContentLoaded', renderCartTotal);
 
-                // ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ МОДАЛЬНОГО ОКНА С СОДЕРЖИМЫМ КОРЗИНЫ
-                const showCartSummary = () => {
-                    // Формируем HTML для содержимого корзины
-                    const cartContent = Object.entries(cartState).map(([item, quantity]) => {
-                        return `<div class="flex justify-between py-2 border-b border-gray-700/50">
-                                    <span class="text-purple-300 font-medium">${item}</span>
-                                    <span class="font-bold text-orange-400">${quantity} шт.</span>
-                                </div>`;
-                    }).join('');
+                // --- ЛОГИКА МОДАЛЬНЫХ ОКОН ---
 
+                const closeModal = (id) => {
+                    const modal = document.getElementById(id);
+                    if (modal) {
+                        modal.remove();
+                    }
+                }
+                
+                // 1. Модальное окно пустой корзины
+                const showEmptyCartModal = () => {
                     const modalHtml = `
-                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="cart-modal">
-                            <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70">
-                                <h3 class="text-2xl neon-title mb-4 border-b border-orange-600 pb-2 text-center">Состав корзины</h3>
-                                <div class="max-h-64 overflow-y-auto pr-2">
-                                    ${cartContent || '<p class="text-gray-400 text-center py-4">Корзина пуста. Добавьте подарки!</p>'}
+                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="empty-cart-modal">
+                            <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
+                                <h3 class="text-2xl neon-title mb-4 pb-2">Корзина пуста!</h3>
+                                <p class="text-gray-300 mb-6">Пожалуйста, добавьте хотя бы один подарок, чтобы продолжить.</p>
+                                <button onclick="closeModal('empty-cart-modal')"
+                                        class="neon-button w-full py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500">
+                                    Понятно
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    let existingModal = document.getElementById('empty-cart-modal');
+                    if (existingModal) { existingModal.remove(); }
+                    
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = modalHtml;
+                    document.body.appendChild(tempDiv.firstChild);
+                };
+                
+                // 2. Модальное окно ввода имени пользователя (по вашему изображению)
+                const showUsernameModal = () => {
+                    const modalHtml = `
+                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="username-modal">
+                            <div class="bg-gray-900/90 rounded-xl p-8 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
+                                
+                                <h3 class="text-3xl font-extrabold mb-8" style="color: #d1b5ff; text-shadow: 0 0 8px #d1b5ff;">
+                                    Enter Your Name
+                                </h3>
+                                
+                                <div class="text-left mb-6">
+                                    <label for="tiktok-username" class="block text-purple-300 font-semibold mb-2">
+                                        Your TikTok Username:
+                                    </label>
+                                    <input type="text" id="tiktok-username" 
+                                           placeholder="e.g., @spookygifter" 
+                                           class="username-input w-full p-3 rounded-lg text-lg focus:outline-none">
                                 </div>
-                                <div class="mt-6 flex justify-between items-center pt-4 border-t border-purple-700">
-                                    <span class="text-xl text-white">Всего товаров:</span>
-                                    <span class="text-2xl font-extrabold neon-subtitle" id="modal-total-items">${totalItems}</span>
-                                </div>
-                                <button onclick="document.getElementById('cart-modal').remove()"
-                                        class="neon-button w-full mt-6 py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                                    Закрыть
+
+                                <button id="submit-username-btn" 
+                                        class="neon-purple-button w-full py-3 rounded-lg text-xl uppercase mb-4">
+                                    Submit
+                                </button>
+                                
+                                <button onclick="closeModal('username-modal')"
+                                        class="w-full text-purple-400 font-semibold hover:text-white transition duration-200">
+                                    Cancel
                                 </button>
                             </div>
                         </div>
                     `;
                     
-                    // Если модальное окно уже существует, удаляем его
-                    let existingModal = document.getElementById('cart-modal');
+                    let existingModal = document.getElementById('username-modal');
                     if (existingModal) { existingModal.remove(); }
                     
-                    // Создаем и показываем модальное окно
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = modalHtml;
+
+                    // ПРИМЕЧАНИЕ: Ошибка возникает здесь, потому что мы ищем кнопку до того, как
+                    // элемент 'username-modal' добавлен в DOM.
+                    
+                    // ИСПРАВЛЕНИЕ: Мы добавляем модальное окно в DOM
+                    document.body.appendChild(tempDiv.firstChild);
+
+                    // И теперь ищем кнопку (она гарантированно существует)
+                    const submitButton = document.getElementById('submit-username-btn');
+
+                    if (submitButton) {
+                         // Добавляем заглушку для кнопки Submit
+                        submitButton.onclick = () => {
+                            const username = document.getElementById('tiktok-username').value.trim();
+                            if (username) {
+                                // Имитация отправки данных (используем модальное окно вместо alert)
+                                closeModal('username-modal');
+                                showConfirmationModal(username);
+                            } else {
+                                // Имитация ошибки (используем модальное окно вместо alert)
+                                showErrorModal('Пожалуйста, введите имя пользователя TikTok.');
+                            }
+                        };
+                    } else {
+                        console.error("Кнопка 'Submit' не найдена в модальном окне.");
+                    }
+                };
+
+                // 3. Вспомогательное модальное окно для подтверждения
+                const showConfirmationModal = (username) => {
+                    const modalHtml = `
+                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="confirmation-modal">
+                            <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
+                                <h3 class="text-2xl neon-title mb-4 pb-2 text-green-400">Успешно!</h3>
+                                <p class="text-gray-300 mb-6">Ваши подарки будут отправлены пользователю **${username}** в ближайшее время!</p>
+                                <button onclick="closeModal('confirmation-modal')"
+                                        class="neon-button w-full py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500">
+                                    Закрыть
+                                </button>
+                            </div>
+                        </div>
+                    `;
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = modalHtml;
                     document.body.appendChild(tempDiv.firstChild);
                 };
+
+                // 4. Вспомогательное модальное окно для ошибки
+                const showErrorModal = (message) => {
+                    const modalHtml = `
+                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="error-modal">
+                            <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
+                                <h3 class="text-2xl neon-title mb-4 pb-2 text-red-400">Ошибка ввода!</h3>
+                                <p class="text-gray-300 mb-6">${message}</p>
+                                <button onclick="closeModal('error-modal')"
+                                        class="neon-button w-full py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500">
+                                    ОК
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = modalHtml;
+                    document.body.appendChild(tempDiv.firstChild);
+                };
+                
+                // Основной обработчик нажатия на "Get Gifts"
+                const handleGetGiftsClick = () => {
+                    if (totalItems === 0) {
+                        showEmptyCartModal();
+                    } else {
+                        showUsernameModal();
+                    }
+                };
+
+                // ИЗБЕГАЕМ устаревшей логики перепривязки
+                // document.addEventListener('DOMContentLoaded', () => { ... });
             </script>
 
             <!-- 1. TikTok Universe (Обновлено) -->
@@ -548,7 +683,7 @@
 
     </div>
 
-    <!-- Фиксированный футер (корзина) - ОБНОВЛЕН Z-INDEX -->
+    <!-- Фиксированный футер (корзина) - ОБНОВЛЕН Z-INDEX И ONCLICK -->
     <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4 z-50">
         <div class="max-w-xl mx-auto flex justify-center items-center space-x-4">
             
@@ -561,8 +696,8 @@
                 <span id="total-item-count" class="cart-badge is-empty">0</span> 
             </div>
             
-            <!-- Кнопка "Get Gifts" -->
-            <button onclick="showCartSummary()" class="neon-button py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300 flex-grow">
+            <!-- Кнопка "Get Gifts" - ИСПРАВЛЕНО -->
+            <button onclick="handleGetGiftsClick()" class="neon-button py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300 flex-grow">
                 Get Gifts
             </button>
 
