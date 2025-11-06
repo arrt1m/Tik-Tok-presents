@@ -80,11 +80,11 @@
                 font-size: 1.125rem; /* text-lg на sm и больше */
             }
         }
-        /* Стили для бейджа корзины (оранжевый кружок) */
+        /* Стили для бейджа корзины (оранжевый кружок) - ОБНОВЛЕНЫ */
         .cart-badge {
             position: absolute;
-            top: 2px; /* Сдвиг, чтобы быть над иконкой */
-            right: 0px;
+            top: -5px; /* Сдвиг, чтобы быть над иконкой */
+            right: -5px;
             background-color: #ff4500; /* Яркий оранжевый */
             color: white;
             font-size: 0.75rem;
@@ -127,14 +127,20 @@
                 let cartState = {};
                 let totalItems = 0;
 
-                // Функция для пересчета общего количества и обновления футера
+                // Функция для пересчета общего количества и обновления футера (ОБНОВЛЕНО)
                 const renderCartTotal = () => {
                     totalItems = Object.values(cartState).reduce((sum, current) => sum + current, 0);
                     
-                    // Обновление цифры в иконке (хотя она сейчас просто иконка, оставим логику)
+                    // Обновление цифры в иконке
                     const totalCountElement = document.getElementById('total-item-count');
                     if (totalCountElement) {
                         totalCountElement.textContent = totalItems;
+                        // Показать/скрыть бейдж в зависимости от количества товаров
+                        if (totalItems > 0) {
+                            totalCountElement.classList.remove('hidden');
+                        } else {
+                            totalCountElement.classList.add('hidden');
+                        }
                     }
                 };
 
@@ -206,7 +212,7 @@
                     
                     cartState[itemName] = newQuantity;
                     
-                    // Если количество стало 0, удаляем из состояния (логика, о которой вы спрашивали)
+                    // Если количество стало 0, удаляем из состояния
                     if (newQuantity === 0) {
                         delete cartState[itemName];
                     }
@@ -215,8 +221,47 @@
                     renderCartTotal();
                 };
 
-                // Инициализация корзины при загрузке (если нужно было бы загружать состояние)
+                // Инициализация корзины при загрузке
                 document.addEventListener('DOMContentLoaded', renderCartTotal);
+
+                // ФУНКЦИЯ ДЛЯ ОТОБРАЖЕНИЯ МОДАЛЬНОГО ОКНА С СОДЕРЖИМЫМ КОРЗИНЫ (НОВАЯ)
+                const showCartSummary = () => {
+                    // Формируем HTML для содержимого корзины
+                    const cartContent = Object.entries(cartState).map(([item, quantity]) => {
+                        return `<div class="flex justify-between py-2 border-b border-gray-700/50">
+                                    <span class="text-purple-300 font-medium">${item}</span>
+                                    <span class="font-bold text-orange-400">${quantity} шт.</span>
+                                </div>`;
+                    }).join('');
+
+                    const modalHtml = `
+                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="cart-modal">
+                            <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70">
+                                <h3 class="text-2xl neon-title mb-4 border-b border-orange-600 pb-2 text-center">Состав корзины</h3>
+                                <div class="max-h-64 overflow-y-auto pr-2">
+                                    ${cartContent || '<p class="text-gray-400 text-center py-4">Корзина пуста. Добавьте подарки!</p>'}
+                                </div>
+                                <div class="mt-6 flex justify-between items-center pt-4 border-t border-purple-700">
+                                    <span class="text-xl text-white">Всего товаров:</span>
+                                    <span class="text-2xl font-extrabold neon-subtitle" id="modal-total-items">${totalItems}</span>
+                                </div>
+                                <button onclick="document.getElementById('cart-modal').remove()"
+                                        class="neon-button w-full mt-6 py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                                    Закрыть
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Если модальное окно уже существует, удаляем его
+                    let existingModal = document.getElementById('cart-modal');
+                    if (existingModal) { existingModal.remove(); }
+                    
+                    // Создаем и показываем модальное окно
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = modalHtml;
+                    document.body.appendChild(tempDiv.firstChild);
+                };
             </script>
 
             <!-- 1. TikTok Universe -->
@@ -446,22 +491,24 @@
     <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4">
         <div class="max-w-xl mx-auto flex justify-center items-center space-x-4">
             
-            <!-- НОВАЯ ИКОНКА (СЛЕВА ОТ КНОПКИ) -->
-            <div class="flex items-center justify-center p-3 rounded-xl flex-shrink-0">
+            <!-- НОВАЯ ИКОНКА С БЕЙДЖЕМ (ОБНОВЛЕНО) -->
+            <div class="flex items-center justify-center p-3 rounded-xl flex-shrink-0 relative">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 neon-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
+                <!-- Бейдж для отображения количества товаров. Класс 'hidden' уберется JS-функцией renderCartTotal, когда товаров станет > 0 -->
+                <span id="total-item-count" class="cart-badge hidden">0</span> 
             </div>
             
-            <!-- Кнопка "Get Gifts" -->
-            <button class="neon-button py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300 flex-grow">
+            <!-- Кнопка "Get Gifts" (ОБНОВЛЕНО: Добавлен обработчик клика) -->
+            <button onclick="showCartSummary()" class="neon-button py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300 flex-grow">
                 Get Gifts
             </button>
 
         </div>
     </footer>
 
-    <!-- Временное сообщение (убрано из логики, но оставлено на всякий случай) -->
+    <!-- Временное сообщение (убрано из логики) -->
     <div id="message-box" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-3 rounded-lg shadow-xl z-50 transition duration-300 ease-in-out">
         
     </div>
