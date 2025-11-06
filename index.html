@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikTok Gift Haul</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Подключение шрифтов: Inter, Bebas Neue, и Press Start 2P --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&family=Press+Start+2P&display=swap" rel="stylesheet">
+    
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
         html, body {
             height: 100%;
@@ -21,15 +23,18 @@
             
             color: white;
         }
+        /* Стили для главного заголовка */
         .neon-title {
             font-family: 'Bebas Neue', cursive;
             color: #ff4500;
             text-shadow: 0 0 5px #ff8c00, 0 0 15px #ff8c00, 0 0 30px #ff0000;
         }
+        /* Стили для подзаголовка */
         .neon-subtitle {
             color: #c9a0ff;
             text-shadow: 0 0 3px #8a2be2, 0 0 10px #8a2be2;
         }
+        /* Стили для кнопок "Add" и "Get Gifts" */
         .neon-button {
             box-shadow: 0 0 5px rgba(255, 69, 0, 0.7), 0 0 15px rgba(255, 69, 0, 0.5);
             transition: all 0.2s ease-in-out;
@@ -38,6 +43,7 @@
             box-shadow: 0 0 10px rgba(255, 69, 0, 1), 0 0 30px rgba(255, 69, 0, 0.7);
             transform: translateY(-1px);
         }
+        /* Стили для плейсхолдеров, если картинка не загрузится */
         .gift-image-placeholder {
             background-color: rgba(10, 10, 30, 0.8); 
             box-shadow: inset 0 0 15px rgba(138, 43, 226, 0.6);
@@ -48,12 +54,14 @@
             font-size: 1.5rem;
             min-height: 200px;
         }
+        /* Стили для самих изображений */
         .gift-image {
             width: 100%;
             height: 100%;
             object-fit: cover; /* Обрезает изображение, чтобы оно заполняло контейнер */
             display: block;
         }
+        /* Стили для названий подарков с неоновым свечением */
         .gift-name-neon {
             font-family: 'Press Start 2P', cursive;
             color: #d1b5ff;
@@ -62,7 +70,7 @@
                 0 0 10px #8a2be2,
                 0 0 15px #4b0082;
             transition: text-shadow 0.3s ease-in-out;
-            /* ИСПРАВЛЕНИЕ: Меньший базовый размер шрифта для лучшей адаптации на мобильных */
+            /* Меньший базовый размер шрифта для лучшей адаптации на мобильных */
             font-size: 0.875rem; /* text-sm */
             line-height: 1.25; /* Для лучшего переноса строк */
         }
@@ -71,6 +79,31 @@
             .gift-name-neon {
                 font-size: 1.125rem; /* text-lg на sm и больше */
             }
+        }
+        /* Стили для бейджа корзины (оранжевый кружок) */
+        .cart-badge {
+            position: absolute;
+            top: 2px; /* Сдвиг, чтобы быть над иконкой */
+            right: 0px;
+            background-color: #ff4500; /* Яркий оранжевый */
+            color: white;
+            font-size: 0.75rem;
+            font-weight: bold;
+            line-height: 1;
+            padding: 4px 6px;
+            border-radius: 9999px; /* Круглый */
+            box-shadow: 0 0 5px #ff8c00;
+        }
+        /* Стили для контейнера корзины слева */
+        .cart-icon-container {
+            background-color: rgba(68, 0, 133, 0.8); /* Темно-фиолетовый */
+            box-shadow: 0 0 10px rgba(138, 43, 226, 0.7); /* Фиолетовое свечение */
+        }
+        /* Стили для новой иконки, чтобы она светилась */
+        .neon-bag-icon {
+            color: #8a2be2; /* Фиолетовый цвет */
+            filter: drop-shadow(0 0 5px #8a2be2) drop-shadow(0 0 10px #4b0082);
+            transition: color 0.2s;
         }
     </style>
 </head>
@@ -90,235 +123,348 @@
         <main id="gift-grid" class="grid grid-cols-2 gap-4">
             
             <script>
+                // Объект для хранения состояния корзины: { itemName: quantity }
+                let cartState = {};
+                let totalItems = 0;
+
+                // Функция для пересчета общего количества и обновления футера
+                const renderCartTotal = () => {
+                    totalItems = Object.values(cartState).reduce((sum, current) => sum + current, 0);
+                    
+                    // Обновление цифры в иконке (хотя она сейчас просто иконка, оставим логику)
+                    const totalCountElement = document.getElementById('total-item-count');
+                    if (totalCountElement) {
+                        totalCountElement.textContent = totalItems;
+                    }
+                };
+
+                // Функция для рендеринга элементов управления количеством ( –, 1, + )
+                const renderQuantityControls = (itemName, quantity) => {
+                    // Создаем контейнер для счетчика
+                    const controls = document.createElement('div');
+                    // Оптимизация: Общий контейнер с закругленными углами
+                    controls.className = 'flex items-center justify-between w-full h-full rounded-xl overflow-hidden shadow-lg shadow-purple-900/50';
+                    controls.innerHTML = `
+                        <button 
+                            id="minus-${itemName.replace(/\s/g, '-')}"
+                            class="w-1/3 py-2.5 bg-purple-600 text-white font-extrabold text-2xl hover:bg-purple-500 transition duration-150"
+                            onclick="handleQuantityChange('${itemName}', -1)">
+                            –
+                        </button>
+                        <span class="w-1/3 text-center text-lg font-bold text-white tracking-widest" 
+                              style="background-color: #1a1a1a; text-shadow: 0 0 8px rgba(255, 255, 255, 0.7); box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.9);">
+                            ${quantity}
+                        </span>
+                        <button 
+                            id="plus-${itemName.replace(/\s/g, '-')}"
+                            class="w-1/3 py-2.5 bg-purple-600 text-white font-extrabold text-2xl hover:bg-purple-500 transition duration-150"
+                            onclick="handleQuantityChange('${itemName}', 1)">
+                            +
+                        </button>
+                    `;
+                    return controls;
+                };
+
+                // Функция для рендеринга кнопки "Add"
+                const renderAddButton = (itemName) => {
+                    const button = document.createElement('button');
+                    button.setAttribute('onclick', `handleAdd('${itemName}')`);
+                    button.className = 'neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50';
+                    button.textContent = 'Add';
+                    return button;
+                };
+
+                // Перерисовывает элемент управления для конкретного подарка
+                const updateGiftControl = (itemName, quantity) => {
+                    const containerId = `controls-${itemName.replace(/\s/g, '-')}`;
+                    const container = document.getElementById(containerId);
+                    
+                    if (!container) return; 
+
+                    container.innerHTML = '';
+                    
+                    if (quantity > 0) {
+                        container.appendChild(renderQuantityControls(itemName, quantity));
+                    } else {
+                        container.appendChild(renderAddButton(itemName));
+                    }
+                };
+                
+                // Обработчик нажатия на "Add" (устанавливает количество в 1)
                 const handleAdd = (itemName) => {
-                    const messageBox = document.getElementById('message-box');
-                    messageBox.classList.remove('hidden');
-                    messageBox.textContent = `"${itemName}" добавлен в корзину!`;
-                    setTimeout(() => {
-                        messageBox.classList.add('hidden');
-                    }, 2000);
-                }
+                    handleQuantityChange(itemName, 1);
+                };
+
+                // Обработчик изменения количества (+ / –)
+                const handleQuantityChange = (itemName, delta) => {
+                    let currentQuantity = cartState[itemName] || 0;
+                    let newQuantity = currentQuantity + delta;
+                    
+                    if (newQuantity < 0) {
+                        newQuantity = 0;
+                    }
+                    
+                    cartState[itemName] = newQuantity;
+                    
+                    // Если количество стало 0, удаляем из состояния (логика, о которой вы спрашивали)
+                    if (newQuantity === 0) {
+                        delete cartState[itemName];
+                    }
+
+                    updateGiftControl(itemName, newQuantity);
+                    renderCartTotal();
+                };
+
+                // Инициализация корзины при загрузке (если нужно было бы загружать состояние)
+                document.addEventListener('DOMContentLoaded', renderCartTotal);
             </script>
 
-            <!-- НАЧАЛО: 12 КАРТОЧЕК ПОДАРКОВ -->
-            <!-- КАРТОЧКА 1: TikTok Universe (ИЗОБРАЖЕНИЕ ОБНОВЛЕНО) -->
+            <!-- 1. TikTok Universe -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://cdn2.dps.vc/iblock/a79/a79204e0fab55cdc35ca0bdfa019face/8f06121e1c15be8566b3fc02982a2027.png" 
                          alt="TikTok Universe Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Universe Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Universe</h3>
-                <button 
-                    onclick="handleAdd('TikTok Universe')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-TikTok-Universe" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('TikTok Universe')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
 
-            <!-- КАРТОЧКА 2: Pegasus (ИЗОБРАЖЕНИЕ ОБНОВЛЕНО) -->
+            <!-- 2. Pegasus -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://cdn2.dps.vc/iblock/7ea/7eaaad60ec567af6679b633b13d45d67/a4efc1be2a75340110072f2b6bba554b.webp" 
                          alt="Pegasus Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Pegasus Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Pegasus</h3>
-                <button 
-                    onclick="handleAdd('Pegasus')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Pegasus" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Pegasus')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
 
-            <!-- КАРТОЧКА 3: Valerian's Oath (ИЗОБРАЖЕНИЕ ОБНОВЛЕНО) -->
+            <!-- 3. Valerian's Oath -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://cdn2.dps.vc/iblock/a28/a28a82c70a624e448a96d3bebbfad3ea/833c0071d92604b5a544bf8f0ad72b68.webp" 
                          alt="Valerian's Oath Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Valerian\'s Oath Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Valerian's Oath</h3>
-                <button 
-                    onclick="handleAdd('Valerian\'s Oath')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Valerian's-Oath" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Valerian\'s Oath')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
 
-            <!-- КАРТОЧКА 4: King of Legends (ИЗОБРАЖЕНИЕ ОБНОВЛЕНО) -->
+            <!-- 4. King of Legends -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://cdn2.dps.vc/iblock/fff/ffff57559cbd0d73b6b877e99fb9d803/b5127bbee5491c0aa32f764b679b087d.webp" 
                          alt="King of Legends Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[King of Legends Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">King of Legends</h3>
-                <button 
-                    onclick="handleAdd('King of Legends')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-King-of-Legends" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('King of Legends')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
 
-            <!-- КАРТОЧКА 5: Fire Phoenix (ИЗОБРАЖЕНИЕ) -->
+            <!-- 5. Fire Phoenix -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/bfb8425a7e8fa03f9fec05a973a4a506.png~tplv-obj.webp" 
                          alt="Fire Phoenix Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Fire Phoenix Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Fire Phoenix</h3>
-                <button 
-                    onclick="handleAdd('Fire Phoenix')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Fire-Phoenix" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Fire Phoenix')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 6: Thunder Falcon (ИЗОБРАЖЕНИЕ) -->
+            <!-- 6. Thunder Falcon -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/26f3fbcda383e6093a19b8e7351a164c~tplv-obj.webp" 
                          alt="Thunder Falcon Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Thunder Falcon Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Thunder Falcon</h3>
-                <button 
-                    onclick="handleAdd('Thunder Falcon')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Thunder-Falcon" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Thunder Falcon')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 7: TikTok Stars (ИЗОБРАЖЕНИЕ) -->
+            <!-- 7. TikTok Stars -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/b1667c891ed39fd68ba7252fff7a1e7c~tplv-obj.webp" 
                          alt="TikTok Stars Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Stars Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Stars</h3>
-                <button 
-                    onclick="handleAdd('TikTok Stars')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-TikTok-Stars" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('TikTok Stars')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 8: TikTok Universe+ (ИЗОБРАЖЕНИЕ) -->
+            <!-- 8. TikTok Universe+ -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/b13105782e8bf8fbefaa83b7af413cee~tplv-obj.webp" 
                          alt="TikTok Universe+ Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Universe+ Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Universe+</h3>
-                <button 
-                    onclick="handleAdd('TikTok Universe+')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-TikTok-Universe+" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('TikTok Universe+')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 9: Leon and Lion (ИЗОБРАЖЕНИЕ) -->
+            <!-- 9. Leon and Lion -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/a291aedacf27d22c3fd2d83575d2bee9~tplv-obj.webp" 
                          alt="Leon and Lion Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Leon and Lion Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Leon and Lion</h3>
-                <button 
-                    onclick="handleAdd('Leon and Lion')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Leon-and-Lion" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Leon and Lion')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 10: TikTok Houses (ИЗОБРАЖЕНИЕ) -->
+            <!-- 10. TikTok Houses -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/8ec7d2a9521cae055105091246d5fdc5.png~tplv-obj.webp" 
                          alt="TikTok Houses Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Houses Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Houses</h3>
-                <button 
-                    onclick="handleAdd('TikTok Houses')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-TikTok-Houses" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('TikTok Houses')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 11: Dragon Flame (ИЗОБРАЖЕНИЕ) -->
+            <!-- 11. Dragon Flame -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/89b4d1d93c1cc614e3a0903ac7a94e0c~tplv-obj.webp" 
                          alt="Dragon Flame Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Dragon Flame Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Dragon Flame</h3>
-                <button 
-                    onclick="handleAdd('Dragon Flame')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Dragon-Flame" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Dragon Flame')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
             
-            <!-- КАРТОЧКА 12: Adam’s Dream (ИЗОБРАЖЕНИЕ) -->
+            <!-- 12. Adam’s Dream -->
             <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
                 <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-1">
                     <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/9a586391fbb1e21621c4203e5563a9e0~tplv-obj.webp" 
                          alt="Adam’s Dream Image" 
-                         class="gift-image rounded-lg m-0"
+                         class="gift-image rounded-lg"
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Adam’s Dream Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Adam’s Dream</h3>
-                <button 
-                    onclick="handleAdd('Adam’s Dream')"
-                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
-                    Add
-                </button>
+                <div id="controls-Adam’s-Dream" class="w-full h-10">
+                    <button 
+                        onclick="handleAdd('Adam’s Dream')"
+                        class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                        Add
+                    </button>
+                </div>
             </div>
 
-            <!-- КОНЕЦ: 12 КАРТОЧЕК ПОДАРКОВ -->
-            <!-- Отступ, чтобы футер не перекрывал последнюю строку -->
+            <!-- Пустой div для корректного отступа над фиксированным футером -->
             <div class="h-28 col-span-2"></div> 
 
         </main>
 
     </div>
 
+    <!-- Фиксированный футер (корзина) -->
     <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4">
-        <div class="max-w-xl mx-auto flex justify-between items-center space-x-3">
+        <div class="max-w-xl mx-auto flex justify-center items-center space-x-4">
             
-            <div class="flex items-center space-x-2 p-3 bg-purple-900/50 rounded-xl">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <!-- НОВАЯ ИКОНКА (СЛЕВА ОТ КНОПКИ) -->
+            <div class="flex items-center justify-center p-3 rounded-xl flex-shrink-0">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 neon-bag-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
-                <span class="text-lg font-bold">12</span>
             </div>
-
-            <button class="neon-button flex-grow py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300">
+            
+            <!-- Кнопка "Get Gifts" -->
+            <button class="neon-button py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300 flex-grow">
                 Get Gifts
             </button>
+
         </div>
     </footer>
 
+    <!-- Временное сообщение (убрано из логики, но оставлено на всякий случай) -->
     <div id="message-box" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-3 rounded-lg shadow-xl z-50 transition duration-300 ease-in-out">
-        <!-- Сообщение будет вставлено здесь JS --></div>
+        
+    </div>
 
 </body>
 </html>
