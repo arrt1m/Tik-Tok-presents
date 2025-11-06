@@ -399,20 +399,24 @@
                     // Используем justify-center и flex для нового макета
                     controls.className = 'flex items-center w-full gift-item-controls';
 
+                    // Важно: Имя элемента передается в HTML с экранированием, 
+                    // чтобы одинарная кавычка не нарушала синтаксис onclick="handleQuantityChange('Valerian\'s Oath', 1)"
+                    const escapedItemName = itemName.replace(/'/g, "\\'");
+
                     controls.innerHTML = `
                         <button 
-                            id="minus-${itemName.replace(/\s/g, '-')}"
+                            id="minus-${itemName.replace(/\s|'/g, '-')}"
                             class="round-qty-button"
-                            onclick="handleQuantityChange('${itemName}', -1)">
+                            onclick="handleQuantityChange('${escapedItemName}', -1)">
                             –
                         </button>
                         <span class="qty-display">
                             ${quantity}
                         </span>
                         <button 
-                            id="plus-${itemName.replace(/\s/g, '-')}"
+                            id="plus-${itemName.replace(/\s|'/g, '-')}"
                             class="round-qty-button"
-                            onclick="handleQuantityChange('${itemName}', 1)">
+                            onclick="handleQuantityChange('${escapedItemName}', 1)">
                             +
                         </button>
                     `;
@@ -422,7 +426,10 @@
                 // Функция для рендеринга кнопки "Add"
                 const renderAddButton = (itemName) => {
                     const button = document.createElement('button');
-                    button.setAttribute('onclick', `handleAdd('${itemName}')`);
+                    // Важно: Имя элемента передается в HTML с экранированием
+                    const escapedItemName = itemName.replace(/'/g, "\\'");
+                    
+                    button.setAttribute('onclick', `handleAdd('${escapedItemName}')`);
                     button.className = 'neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50';
                     button.textContent = 'Add';
                     return button;
@@ -430,7 +437,8 @@
 
                 // Перерисовывает элемент управления для конкретного подарка
                 const updateGiftControl = (itemName, quantity) => {
-                    const containerId = `controls-${itemName.replace(/\s/g, '-')}`;
+                    // Используем регулярное выражение для замены пробелов И кавычек на дефис для ID
+                    const containerId = `controls-${itemName.replace(/\s|'/g, '-')}`;
                     const container = document.getElementById(containerId);
                     
                     if (!container) return; 
@@ -711,7 +719,8 @@
                          onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Valerian\'s Oath Image]</span>';">
                 </div>
                 <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Valerian's Oath</h3>
-                <div id="controls-Valerian's-Oath" class="w-full h-10">
+                <!-- ИСПРАВЛЕНО: ID без кавычки -->
+                <div id="controls-Valerian-s-Oath" class="w-full h-10">
                     <button 
                         onclick="handleAdd('Valerian\'s Oath')"
                         class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
