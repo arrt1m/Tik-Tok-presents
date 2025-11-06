@@ -1,1 +1,317 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <!-- КЛЮЧЕВОЙ МОМЕНТ: Viewport гарантирует, что сайт отображается корректно на мобильных устройствах -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Gift Haul</title>
+    <!-- Подключение Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Подключение шрифта Inter (для основного текста) и Bebas Neue (для заголовка, чтобы имитировать стиль) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Bebas+Neue&display=swap" rel="stylesheet">
+    <style>
+        /* Обеспечиваем, что HTML и BODY занимают всю высоту для корректного отображения фона */
+        html, body {
+            height: 100%;
+        }
 
+        /* Общие стили для темной темы и шрифта */
+        body {
+            font-family: 'Inter', sans-serif;
+            /* УСТАНОВКА ФОНОВОГО ИЗОБРАЖЕНИЯ */
+            background-image: url('https://d1csarkz8obe9u.cloudfront.net/posterpreviews/black-funky-tiktok-background-image-design-template-8f3fa337008c56665bc013eb2b29b094.jpg?ts=1637017477');
+            background-color: #000000; /* Усиленный чистый черный цвет как резерв */
+            background-size: cover; /* Растягиваем изображение на всю область */
+            background-position: center; /* Центрируем изображение */
+            background-attachment: fixed; /* Фиксируем изображение при прокрутке */
+            
+            color: white;
+            padding-bottom: 7rem; /* Отступ для фиксированного футера */
+        }
+        /* Custom style для неонового эффекта на главном заголовке */
+        .neon-title {
+            font-family: 'Bebas Neue', cursive;
+            color: #ff4500; /* OrangeRed */
+            text-shadow: 0 0 5px #ff8c00, 0 0 15px #ff8c00, 0 0 30px #ff0000;
+        }
+        /* Custom style для свечения подзаголовка */
+        .neon-subtitle {
+            color: #c9a0ff; /* Light purple */
+            text-shadow: 0 0 3px #8a2be2, 0 0 10px #8a2be2;
+        }
+        /* Custom style для свечения кнопок */
+        .neon-button {
+            box-shadow: 0 0 5px rgba(255, 69, 0, 0.7), 0 0 15px rgba(255, 69, 0, 0.5);
+            transition: all 0.2s ease-in-out;
+        }
+        .neon-button:hover {
+            box-shadow: 0 0 10px rgba(255, 69, 0, 1), 0 0 30px rgba(255, 69, 0, 0.7);
+            transform: translateY(-1px);
+        }
+        /* Стили для плейсхолдера изображения с эффектом свечения */
+        .gift-image-placeholder {
+            background-color: rgba(10, 10, 30, 0.8); 
+            box-shadow: inset 0 0 15px rgba(138, 43, 226, 0.6); /* Внутреннее свечение */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1.5rem;
+            min-height: 200px;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+
+    <!-- Основной контент (Центрируем и ограничиваем ширину для мобильного вида) -->
+    <!-- max-w-xl гарантирует, что на больших экранах контент не будет слишком растянут -->
+    <div class="max-w-xl mx-auto p-4 pt-10">
+        
+        <!-- Заголовок -->
+        <header class="text-center mb-10">
+            <!-- Адаптивный размер: text-5xl на маленьких экранах, text-6xl на средних и больше -->
+            <h1 class="neon-title text-5xl sm:text-6xl font-extrabold tracking-wider mb-2 uppercase">
+                TIKTOK GIFT
+            </h1>
+            <!-- Адаптивный размер: text-base на маленьких экранах, text-lg на средних и больше -->
+            <p class="neon-subtitle text-base sm:text-lg font-semibold tracking-wide">
+                Your Halloween & Black Friday Haul!
+            </p>
+        </header>
+
+        <!-- Сетка карточек подарков -->
+        <!-- Grid layout: 2 колонки (grid-cols-2) отлично подходит для мобильных устройств -->
+        <main id="gift-grid" class="grid grid-cols-2 gap-4">
+            
+            <!-- Функция для создания карточки подарка -->
+            <script>
+                // JavaScript для обработки кликов, чтобы избежать alert()
+                const handleAdd = (itemName) => {
+                    const messageBox = document.getElementById('message-box');
+                    messageBox.classList.remove('hidden');
+                    messageBox.textContent = `"${itemName}" добавлен в корзину!`;
+                    setTimeout(() => {
+                        messageBox.classList.add('hidden');
+                    }, 2000);
+                }
+            </script>
+
+            <!-- НАЧАЛО: 12 КАРТОЧЕК ПОДАРКОВ -->
+            
+            <!-- Подарок 1: Mystery Box (ОРИГИНАЛЬНЫЙ) -->
+            <!-- Фон карточки (bg-gray-900/70) с полупрозрачностью позволяет видеть фоновое изображение -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <!-- Плейсхолдер для изображения: aspect-square гарантирует идеальное соотношение 1:1 -->
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Mystery Box Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Mystery Box</h3>
+                
+                <button 
+                    onclick="handleAdd('Mystery Box')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+
+            <!-- Подарок 2: Haunted Dolls (ОРИГИНАЛЬНЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Haunted Dolls Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Haunted Dolls</h3>
+                
+                <button 
+                    onclick="handleAdd('Haunted Dolls')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+
+            <!-- Подарок 3: Gothic Skull (ОРИГИНАЛЬНЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Gothic Skull Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Gothic Skull</h3>
+                
+                <button 
+                    onclick="handleAdd('Gothic Skull')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+
+            <!-- Подарок 4: Magic Potion (ОРИГИНАЛЬНЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Magic Potion Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Magic Potion</h3>
+                
+                <button 
+                    onclick="handleAdd('Magic Potion')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+
+            <!-- Подарок 5: Dark Amulet (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Dark Amulet Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Dark Amulet</h3>
+                
+                <button 
+                    onclick="handleAdd('Dark Amulet')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 6: Zombie Hand (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Zombie Hand Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Zombie Hand</h3>
+                
+                <button 
+                    onclick="handleAdd('Zombie Hand')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 7: Crystal Ball (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Crystal Ball Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Crystal Ball</h3>
+                
+                <button 
+                    onclick="handleAdd('Crystal Ball')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 8: Ancient Tome (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Ancient Tome Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Ancient Tome</h3>
+                
+                <button 
+                    onclick="handleAdd('Ancient Tome')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 9: Shadow Cloak (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Shadow Cloak Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Shadow Cloak</h3>
+                
+                <button 
+                    onclick="handleAdd('Shadow Cloak')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 10: Spectral Cat (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Spectral Cat Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Spectral Cat</h3>
+                
+                <button 
+                    onclick="handleAdd('Spectral Cat')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 11: Frozen Breath (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Frozen Breath Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Frozen Breath</h3>
+                
+                <button 
+                    onclick="handleAdd('Frozen Breath')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+            
+            <!-- Подарок 12: Vampire Dust (ДОБАВЛЕННЫЙ) -->
+            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
+                    [Vampire Dust Image]
+                </div>
+                
+                <h3 class="text-xl font-bold text-center mb-3">Vampire Dust</h3>
+                
+                <button 
+                    onclick="handleAdd('Vampire Dust')"
+                    class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
+                    Add
+                </button>
+            </div>
+
+            <!-- КОНЕЦ: 12 КАРТОЧЕК ПОДАРКОВ -->
+
+        </main>
+
+    </div>
+
+    <!-- Фиксированный футер (липкий внизу экрана) -->
+    <!-- fixed bottom-0 обеспечивает, что он всегда виден на мобильном устройстве -->
+    <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4">
+        <div class="max-w-xl mx-auto flex justify-between items-center space-x-3">
+            
+            <!-- Иконка корзины / счетчик -->
+            <div class="flex items-center space-x-2 p-3 bg-purple-900/50 rounded-xl">
+                <!-- Иконка SVG корзины -->
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                </svg>
+                <!-- Обновленный счетчик: 12 -->
+                <span class="text-lg font-bold">12</span>
+            </div>
+
+            <!-- Кнопка "Get Gifts" -->
+            <button class="neon-button flex-grow py-3 rounded-xl bg-orange-600 text-white font-extrabold text-xl uppercase tracking-wider hover:bg-orange-500 transition duration-300">
+                Get Gifts
+            </button>
+        </div>
+    </footer>
+
+    <!-- Пользовательское сообщение (замена alert()) -->
+    <div id="message-box" class="hidden fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-600 text-white p-3 rounded-lg shadow-xl z-50 transition duration-300 ease-in-out">
+        <!-- Сообщение будет вставлено здесь JS -->
+    </div>
+
+</body>
+</html>
