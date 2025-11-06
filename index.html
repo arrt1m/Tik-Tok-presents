@@ -133,7 +133,7 @@
             flex-shrink: 0; /* Чтобы не сжимались в flex-контейнере */
         }
         .round-qty-button:hover {
-            background-color: #9370db; /* MediumPurple */
+            background-color: #9370db;
             box-shadow: 0 0 15px rgba(138, 43, 226, 1), 0 0 35px rgba(75, 0, 130, 0.8);
             transform: scale(1.05);
         }
@@ -192,9 +192,40 @@
             box-shadow: 0 0 15px #8a2be2, 0 0 30px #4b0082;
             transform: translateY(-1px);
         }
+        
+        /* НОВЫЙ СТИЛЬ: Размытый фон для модальных окон */
+        .modal-backdrop-blur {
+            /* Черный с высокой прозрачностью */
+            background-color: rgba(0, 0, 0, 0.7); 
+            /* Применяем сильное размытие */
+            backdrop-filter: blur(10px); 
+            /* Добавлено для совместимости с -webkit- */
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        /* Стили для Canvas Confetti */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Позволяет кликам проходить сквозь канвас */
+            z-index: 1000; /* Выше всего */
+        }
+        
+        /* Стили для галочки подтверждения */
+        .success-checkmark-icon {
+            color: #00ffff; /* Светло-голубой/циан */
+            filter: drop-shadow(0 0 5px #00ffff) drop-shadow(0 0 15px #00cccc);
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body class="min-h-screen">
+    
+    <!-- CANVAS для анимации Confetti -->
+    <canvas id="confetti-canvas" style="display: none;"></canvas>
 
     <div class="max-w-xl mx-auto p-4 pt-10">
         
@@ -213,9 +244,136 @@
                 // Объект для хранения состояния корзины: { itemName: quantity }
                 let cartState = {};
                 let totalItems = 0;
+                
+                // Глобальные переменные для Confetti
+                let confettiCanvas = null;
+                let confettiContext = null;
+                let particles = [];
+                let animationFrameId = null;
 
-                // Функция для пересчета общего количества и обновления футера
+                const COLORS = [
+                    '#ff4500', // Оранжевый (TikTok)
+                    '#8a2be2', // Фиолетовый (Неон)
+                    '#ff00ff', // Фуксия (Неон)
+                    '#00ffff', // Голубой (Неон)
+                    '#ffffff'  // Белый
+                ];
+
+                // Класс частицы конфетти
+                class Particle {
+                    constructor(x, y, radius, color, velocity) {
+                        this.x = x;
+                        this.y = y;
+                        this.radius = radius;
+                        this.color = color;
+                        this.velocity = velocity;
+                        this.gravity = 0.5;
+                        this.rotation = Math.random() * 360;
+                        this.angularVelocity = Math.random() * 0.2 - 0.1;
+                    }
+
+                    draw() {
+                        confettiContext.save();
+                        confettiContext.translate(this.x, this.y);
+                        confettiContext.rotate(this.rotation * Math.PI / 180);
+                        confettiContext.fillStyle = this.color;
+                        confettiContext.fillRect(-this.radius / 2, -this.radius / 2, this.radius, this.radius);
+                        confettiContext.restore();
+                    }
+
+                    update() {
+                        this.velocity.y += this.gravity;
+                        this.x += this.velocity.x;
+                        this.y += this.velocity.y;
+                        this.rotation += this.angularVelocity * 10;
+                        
+                        // Плавное затухание (уменьшаем размер)
+                        this.radius *= 0.99; 
+                        this.draw();
+                    }
+                }
+
+                // Запуск анимации конфетти
+                const startConfetti = () => {
+                    confettiCanvas = document.getElementById('confetti-canvas');
+                    confettiContext = confettiCanvas.getContext('2d');
+                    confettiCanvas.style.display = 'block';
+                    
+                    // Устанавливаем размер канваса на размер окна
+                    confettiCanvas.width = window.innerWidth;
+                    confettiCanvas.height = window.innerHeight;
+                    
+                    particles = [];
+                    
+                    // Точка запуска (центр экрана)
+                    const x = confettiCanvas.width / 2;
+                    const y = confettiCanvas.height / 2;
+                    
+                    // Создаем 150-200 частиц
+                    for (let i = 0; i < 180; i++) {
+                        const radius = Math.random() * 10 + 5;
+                        const color = COLORS[Math.floor(Math.random() * COLORS.length)];
+                        
+                        // Запускаем из центра в случайных направлениях
+                        const angle = Math.random() * Math.PI * 2;
+                        const speed = Math.random() * 15 + 10; 
+                        
+                        const velocity = {
+                            x: Math.cos(angle) * speed,
+                            y: Math.sin(angle) * speed - 15 // Чтобы частицы сначала летели вверх
+                        };
+                        
+                        particles.push(new Particle(x, y, radius, color, velocity));
+                    }
+                    
+                    // Запускаем цикл анимации
+                    animateConfetti();
+                };
+
+                // Цикл анимации
+                const animateConfetti = () => {
+                    // Очистка канваса
+                    confettiContext.fillStyle = 'rgba(0, 0, 0, 0.0)';
+                    confettiContext.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+                    // Обновление и отрисовка частиц
+                    for (let i = particles.length - 1; i >= 0; i--) {
+                        particles[i].update();
+                        
+                        // Удаляем частицы, которые стали слишком маленькими или улетели за экран
+                        if (particles[i].radius < 0.5 || particles[i].y > confettiCanvas.height) {
+                            particles.splice(i, 1);
+                        }
+                    }
+
+                    // Продолжаем анимацию, если есть частицы
+                    if (particles.length > 0) {
+                        animationFrameId = requestAnimationFrame(animateConfetti);
+                    } else {
+                        // Останавливаем и скрываем канвас, когда анимация закончится
+                        stopConfetti();
+                    }
+                };
+
+                // Остановка анимации
+                const stopConfetti = () => {
+                    if (animationFrameId) {
+                        cancelAnimationFrame(animationFrameId);
+                        animationFrameId = null;
+                    }
+                    if (confettiCanvas) {
+                        confettiCanvas.style.display = 'none';
+                        confettiContext.clearRect(0, 0, confettiCanvas.width, confettiContext.height);
+                    }
+                };
+                
+                // Пересчет общего количества и обновления футера
                 const renderCartTotal = () => {
+                    // *** ИСПРАВЛЕНИЕ: Убедиться, что cartState определен, если вызывается вне add/change handler ***
+                    if (typeof cartState === 'undefined' || cartState === null) {
+                        cartState = {};
+                    }
+
                     totalItems = Object.values(cartState).reduce((sum, current) => sum + current, 0);
                     
                     // Обновление цифры в иконке
@@ -310,8 +468,6 @@
                     renderCartTotal();
                 };
 
-                // Инициализация корзины при загрузке
-                document.addEventListener('DOMContentLoaded', renderCartTotal);
 
                 // --- ЛОГИКА МОДАЛЬНЫХ ОКОН ---
 
@@ -320,12 +476,19 @@
                     if (modal) {
                         modal.remove();
                     }
+                    // Важно: останавливаем конфетти при закрытии любого модального окна
+                    stopConfetti(); 
+                    
+                    // *** ИСПРАВЛЕНИЕ: Обновляем корзину, чтобы сбросить состояние, если нужно ***
+                    // Если вы хотите очищать корзину после успешной отправки, это место для логики:
+                    // cartState = {}; 
+                    // renderCartTotal(); 
                 }
                 
                 // 1. Модальное окно пустой корзины
                 const showEmptyCartModal = () => {
                     const modalHtml = `
-                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="empty-cart-modal">
+                        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop-blur" id="empty-cart-modal">
                             <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
                                 <h3 class="text-2xl neon-title mb-4 pb-2">Корзина пуста!</h3>
                                 <p class="text-gray-300 mb-6">Пожалуйста, добавьте хотя бы один подарок, чтобы продолжить.</p>
@@ -341,13 +504,13 @@
                     
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = modalHtml;
-                    document.body.appendChild(tempDiv.firstChild);
+                    document.body.appendChild(tempDiv.firstElementChild);
                 };
                 
-                // 2. Модальное окно ввода имени пользователя (по вашему изображению)
+                // 2. Модальное окно ввода имени пользователя (соответствует изображению)
                 const showUsernameModal = () => {
                     const modalHtml = `
-                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="username-modal">
+                        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop-blur" id="username-modal">
                             <div class="bg-gray-900/90 rounded-xl p-8 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
                                 
                                 <h3 class="text-3xl font-extrabold mb-8" style="color: #d1b5ff; text-shadow: 0 0 8px #d1b5ff;">
@@ -382,25 +545,23 @@
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = modalHtml;
 
-                    // ПРИМЕЧАНИЕ: Ошибка возникает здесь, потому что мы ищем кнопку до того, как
-                    // элемент 'username-modal' добавлен в DOM.
-                    
-                    // ИСПРАВЛЕНИЕ: Мы добавляем модальное окно в DOM
-                    document.body.appendChild(tempDiv.firstChild);
+                    // Получаем корневой элемент и добавляем его в DOM
+                    const modalRoot = tempDiv.firstElementChild;
+                    document.body.appendChild(modalRoot);
 
-                    // И теперь ищем кнопку (она гарантированно существует)
-                    const submitButton = document.getElementById('submit-username-btn');
+                    // Ищем кнопку submit внутри корневого элемента для надежности
+                    const submitButton = modalRoot.querySelector('#submit-username-btn');
 
                     if (submitButton) {
-                         // Добавляем заглушку для кнопки Submit
+                         // Добавляем обработчик для кнопки Submit
                         submitButton.onclick = () => {
                             const username = document.getElementById('tiktok-username').value.trim();
                             if (username) {
-                                // Имитация отправки данных (используем модальное окно вместо alert)
+                                // Показываем модальное окно подтверждения
                                 closeModal('username-modal');
                                 showConfirmationModal(username);
                             } else {
-                                // Имитация ошибки (используем модальное окно вместо alert)
+                                // Показываем модальное окно ошибки
                                 showErrorModal('Пожалуйста, введите имя пользователя TikTok.');
                             }
                         };
@@ -409,29 +570,47 @@
                     }
                 };
 
-                // 3. Вспомогательное модальное окно для подтверждения
+                // 3. Вспомогательное модальное окно для подтверждения - ОБНОВЛЕНО
                 const showConfirmationModal = (username) => {
+                    // *** ЗАПУСК АНИМАЦИИ КОНФЕТТИ ***
+                    startConfetti(); 
+
                     const modalHtml = `
-                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="confirmation-modal">
+                        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop-blur" id="confirmation-modal">
                             <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
-                                <h3 class="text-2xl neon-title mb-4 pb-2 text-green-400">Успешно!</h3>
-                                <p class="text-gray-300 mb-6">Ваши подарки будут отправлены пользователю **${username}** в ближайшее время!</p>
+                                
+                                <!-- Иконка галочки -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto success-checkmark-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+                                </svg>
+                                
+                                <!-- Текст "Success!" -->
+                                <h3 class="text-3xl font-extrabold mb-2 uppercase" style="color: #00ffff; text-shadow: 0 0 5px #00ffff, 0 0 10px #00cccc;">
+                                    Success!
+                                </h3>
+                                
+                                <!-- Текст "Check your TikTok account." -->
+                                <p class="text-lg text-gray-300 mb-6 font-semibold tracking-wide">
+                                    Check your TikTok account.
+                                </p>
+                                
+                                <!-- Кнопка "Awesome!" -->
                                 <button onclick="closeModal('confirmation-modal')"
-                                        class="neon-button w-full py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500">
-                                    Закрыть
+                                        class="neon-button w-full py-3 rounded-xl bg-orange-600 text-white font-bold uppercase text-xl hover:bg-orange-500">
+                                    Awesome!
                                 </button>
                             </div>
                         </div>
                     `;
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = modalHtml;
-                    document.body.appendChild(tempDiv.firstChild);
+                    document.body.appendChild(tempDiv.firstElementChild);
                 };
 
                 // 4. Вспомогательное модальное окно для ошибки
                 const showErrorModal = (message) => {
                     const modalHtml = `
-                        <div class="fixed inset-0 bg-black bg-opacity-80 z-50 flex items-center justify-center p-4" id="error-modal">
+                        <div class="fixed inset-0 z-50 flex items-center justify-center p-4 modal-backdrop-blur" id="error-modal">
                             <div class="bg-gray-900/90 rounded-xl p-6 w-full max-w-sm border border-purple-700 shadow-2xl shadow-purple-900/70 text-center">
                                 <h3 class="text-2xl neon-title mb-4 pb-2 text-red-400">Ошибка ввода!</h3>
                                 <p class="text-gray-300 mb-6">${message}</p>
@@ -444,7 +623,7 @@
                     `;
                     const tempDiv = document.createElement('div');
                     tempDiv.innerHTML = modalHtml;
-                    document.body.appendChild(tempDiv.firstChild);
+                    document.body.appendChild(tempDiv.firstElementChild);
                 };
                 
                 // Основной обработчик нажатия на "Get Gifts"
@@ -456,8 +635,17 @@
                     }
                 };
 
-                // ИЗБЕГАЕМ устаревшей логики перепривязки
-                // document.addEventListener('DOMContentLoaded', () => { ... });
+                // Инициализация корзины при загрузке
+                document.addEventListener('DOMContentLoaded', renderCartTotal);
+                
+                // Также настраиваем пересчет размера канваса при изменении размера окна
+                window.addEventListener('resize', () => {
+                    if (confettiCanvas && confettiCanvas.style.display !== 'none') {
+                        confettiCanvas.width = window.innerWidth;
+                        confettiCanvas.height = window.innerHeight;
+                    }
+                });
+                
             </script>
 
             <!-- 1. TikTok Universe (Обновлено) -->
