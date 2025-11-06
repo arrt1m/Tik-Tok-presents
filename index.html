@@ -48,6 +48,12 @@
             font-size: 1.5rem;
             min-height: 200px;
         }
+        .gift-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Обрезает изображение, чтобы оно заполняло контейнер */
+            display: block;
+        }
         .gift-name-neon {
             font-family: 'Press Start 2P', cursive;
             color: #d1b5ff;
@@ -94,151 +100,187 @@
                 }
             </script>
 
-            <!-- НАЧАЛО: 12 КАРТОЧЕК ПОДАРКОВ --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Mystery Box Image]
+            <!-- НАЧАЛО: 12 КАРТОЧЕК ПОДАРКОВ --><!-- КАРТОЧКА 1: TikTok Universe (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/8f471afbcebfda3841a6cc515e381f58~tplv-obj.webp" 
+                         alt="TikTok Universe Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Universe Image]</span>';">
                 </div>
-                <!-- Добавлен flex-grow для названия --><h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Mystery Box</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Universe</h3>
                 <button 
-                    onclick="handleAdd('Mystery Box')"
+                    onclick="handleAdd('TikTok Universe')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
 
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Haunted Dolls Image]
+            <!-- КАРТОЧКА 2: Pegasus (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/f600a2495ab5d250e7da2066484a9383.png~tplv-obj.webp" 
+                         alt="Pegasus Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Pegasus Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Haunted Dolls</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Pegasus</h3>
                 <button 
-                    onclick="handleAdd('Haunted Dolls')"
+                    onclick="handleAdd('Pegasus')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
 
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Gothic Skull Image]
+            <!-- КАРТОЧКА 3: Valerian's Oath (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/alisg/webcast-sg/resource/27408e0429e288fc735e9f010da9fcf3.png~tplv-obj.webp" 
+                         alt="Valerian's Oath Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Valerian\'s Oath Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Gothic Skull</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Valerian's Oath</h3>
                 <button 
-                    onclick="handleAdd('Gothic Skull')"
+                    onclick="handleAdd('Valerian\'s Oath')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
 
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Magic Potion Image]
+            <!-- КАРТОЧКА 4: King of Legends (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/alisg/webcast-sg/resource/3790b60a52697daa138bf8d0ec27242f.png~tplv-obj.webp" 
+                         alt="King of Legends Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[King of Legends Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Magic Potion</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">King of Legends</h3>
                 <button 
-                    onclick="handleAdd('Magic Potion')"
+                    onclick="handleAdd('King of Legends')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
 
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Dark Amulet Image]
+            <!-- КАРТОЧКА 5: Fire Phoenix (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/bfb8425a7e8fa03f9fec05a973a4a506.png~tplv-obj.webp" 
+                         alt="Fire Phoenix Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Fire Phoenix Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Dark Amulet</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Fire Phoenix</h3>
                 <button 
-                    onclick="handleAdd('Dark Amulet')"
+                    onclick="handleAdd('Fire Phoenix')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Zombie Hand Image]
+            <!-- КАРТОЧКА 6: Thunder Falcon (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/26f3fbcda383e6093a19b8e7351a164c~tplv-obj.webp" 
+                         alt="Thunder Falcon Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Thunder Falcon Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Zombie Hand</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Thunder Falcon</h3>
                 <button 
-                    onclick="handleAdd('Zombie Hand')"
+                    onclick="handleAdd('Thunder Falcon')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Crystal Ball Image]
+            <!-- КАРТОЧКА 7: TikTok Stars (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/b1667c891ed39fd68ba7252fff7a1e7c~tplv-obj.webp" 
+                         alt="TikTok Stars Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Stars Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Crystal Ball</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Stars</h3>
                 <button 
-                    onclick="handleAdd('Crystal Ball')"
+                    onclick="handleAdd('TikTok Stars')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Ancient Tome Image]
+            <!-- КАРТОЧКА 8: TikTok Universe+ (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/b13105782e8bf8fbefaa83b7af413cee~tplv-obj.webp" 
+                         alt="TikTok Universe+ Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Universe+ Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Ancient Tome</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Universe+</h3>
                 <button 
-                    onclick="handleAdd('Ancient Tome')"
+                    onclick="handleAdd('TikTok Universe+')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Shadow Cloak Image]
+            <!-- КАРТОЧКА 9: Leon and Lion (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/a291aedacf27d22c3fd2d83575d2bee9~tplv-obj.webp" 
+                         alt="Leon and Lion Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Leon and Lion Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Shadow Cloak</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Leon and Lion</h3>
                 <button 
-                    onclick="handleAdd('Shadow Cloak')"
+                    onclick="handleAdd('Leon and Lion')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Spectral Cat Image]
+            <!-- КАРТОЧКА 10: TikTok Houses (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/resource/8ec7d2a9521cae055105091246d5fdc5.png~tplv-obj.webp" 
+                         alt="TikTok Houses Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[TikTok Houses Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Spectral Cat</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">TikTok Houses</h3>
                 <button 
-                    onclick="handleAdd('Spectral Cat')"
+                    onclick="handleAdd('TikTok Houses')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Frozen Breath Image]
+            <!-- КАРТОЧКА 11: Dragon Flame (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/89b4d1d93c1cc614e3a0903ac7a94e0c~tplv-obj.webp" 
+                         alt="Dragon Flame Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Dragon Flame Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Frozen Breath</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Dragon Flame</h3>
                 <button 
-                    onclick="handleAdd('Frozen Breath')"
+                    onclick="handleAdd('Dragon Flame')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
             
-            <div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
-                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3">
-                    [Vampire Dust Image]
+            <!-- КАРТОЧКА 12: Adam’s Dream (ИЗОБРАЖЕНИЕ) --><div class="bg-gray-900/70 backdrop-blur-sm rounded-xl overflow-hidden shadow-2xl p-2 flex flex-col items-center border border-purple-800/50">
+                <div class="gift-image-placeholder w-full aspect-square rounded-lg mb-3 p-0">
+                    <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/9a586391fbb1e21621c4203e5563a9e0~tplv-obj.webp" 
+                         alt="Adam’s Dream Image" 
+                         class="gift-image rounded-lg"
+                         onerror="this.onerror=null; this.parentElement.innerHTML = '<span>[Adam’s Dream Image]</span>';">
                 </div>
-                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Vampire Dust</h3>
+                <h3 class="gift-name-neon flex-grow font-bold text-center mb-3">Adam’s Dream</h3>
                 <button 
-                    onclick="handleAdd('Vampire Dust')"
+                    onclick="handleAdd('Adam’s Dream')"
                     class="neon-button w-full py-2.5 rounded-xl bg-orange-600 text-white font-bold uppercase text-lg hover:bg-orange-500 focus:outline-none focus:ring-4 focus:ring-orange-600/50">
                     Add
                 </button>
             </div>
 
-            <!-- КОНЕЦ: 12 КАРТОЧЕК ПОДАРКОВ --><div class="h-28 col-span-2"></div> 
+            <!-- КОНЕЦ: 12 КАРТОЧЕК ПОДАРКОВ --><!-- Отступ, чтобы футер не перекрывал последнюю строку --><div class="h-28 col-span-2"></div> 
 
         </main>
 
