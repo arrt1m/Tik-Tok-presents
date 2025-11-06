@@ -15,6 +15,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
+            /* Фон останется красивым фоновым изображением TikTok */
             background-image: url('https://wallpapers-clan.com/wp-content/uploads/2020/09/tik-tok-logo-black-wallpaper-scaled.jpg');
             background-color: #000000;
             background-size: cover;
@@ -227,9 +228,9 @@
     <!-- CANVAS для анимации Confetti -->
     <canvas id="confetti-canvas" style="display: none;"></canvas>
 
-    <div class="max-w-xl mx-auto p-4 pt-10">
+    <div class="max-w-xl mx-auto p-4 pt-10" id="main-content-container">
         
-        <header class="text-center mb-10">
+        <header class="text-center mb-10" id="app-header">
             <h1 class="neon-title text-5xl sm:text-6xl font-extrabold tracking-wider mb-2 uppercase">
                 TIKTOK GIFT
             </h1>
@@ -469,6 +470,19 @@
                 };
 
 
+                // --- ЛОГИКА СКРЫТИЯ UI ---
+                const resetUI = () => {
+                    const header = document.getElementById('app-header');
+                    const mainContent = document.getElementById('gift-grid');
+                    const footer = document.getElementById('app-footer');
+                    
+                    if (header) header.style.display = 'none';
+                    if (mainContent) mainContent.style.display = 'none';
+                    if (footer) footer.style.display = 'none';
+                };
+                // --- КОНЕЦ ЛОГИКИ СКРЫТИЯ UI ---
+
+
                 // --- ЛОГИКА МОДАЛЬНЫХ ОКОН ---
 
                 const closeModal = (id) => {
@@ -479,10 +493,14 @@
                     // Важно: останавливаем конфетти при закрытии любого модального окна
                     stopConfetti(); 
                     
-                    // *** ИСПРАВЛЕНИЕ: Обновляем корзину, чтобы сбросить состояние, если нужно ***
-                    // Если вы хотите очищать корзину после успешной отправки, это место для логики:
-                    // cartState = {}; 
-                    // renderCartTotal(); 
+                    // *** НОВОЕ: Если закрывается модальное окно подтверждения, сбрасываем UI и корзину ***
+                    if (id === 'confirmation-modal') {
+                        // Скрываем все элементы UI
+                        resetUI(); 
+                        // Очищаем корзину, чтобы при перезагрузке начать заново (если это одноразовая акция)
+                        cartState = {};
+                        renderCartTotal(); 
+                    }
                 }
                 
                 // 1. Модальное окно пустой корзины
@@ -872,7 +890,7 @@
     </div>
 
     <!-- Фиксированный футер (корзина) - ОБНОВЛЕН Z-INDEX И ONCLICK -->
-    <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4 z-50">
+    <footer class="fixed bottom-0 left-0 right-0 bg-gray-900/95 backdrop-blur-sm border-t border-purple-800/50 shadow-2xl p-4 z-50" id="app-footer">
         <div class="max-w-xl mx-auto flex justify-center items-center space-x-4">
             
             <!-- НОВАЯ ИКОНКА С БЕЙДЖЕМ -->
